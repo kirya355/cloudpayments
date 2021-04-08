@@ -11,10 +11,10 @@ class CloudpaymentsApplePay {
 
   /// Checks whether an Apple Pay is available on this device and can process payment requests using
   /// Cloudpayments payment network brands (Visa and Mastercard).
-  Future<bool> isApplePayAvailable() async {
+  Future<bool?> isApplePayAvailable() async {
     if (Platform.isIOS) {
       try {
-        final bool available = await _channel.invokeMethod('isApplePayAvailable');
+        final bool? available = await _channel.invokeMethod('isApplePayAvailable');
         return available;
       } on PlatformException catch (_) {
         return false;
@@ -44,11 +44,11 @@ class CloudpaymentsApplePay {
   ///   {"name": "Total", "price": "430.60"},
   /// ]
   ///```
-  Future<String> requestApplePayPayment({
-    @required String merchantId,
-    @required String currencyCode,
-    @required String countryCode,
-    @required List<Map<String, String>> products,
+  Future<String?> requestApplePayPayment({
+    required String merchantId,
+    required String currencyCode,
+    required String countryCode,
+    required List<Map<String, String>> products,
   }) async {
     if (Platform.isIOS) {
       try {

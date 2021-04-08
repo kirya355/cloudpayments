@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 class GooglePayResponse {
-  final String status;
-  final Map<String, dynamic> result;
-  final String errorCode;
-  final String errorMessage;
-  final String errorDescription;
+  final String? status;
+  final Map<String, dynamic>? result;
+  final String? errorCode;
+  final String? errorMessage;
+  final String? errorDescription;
 
   GooglePayResponse(this.status, this.result, this.errorCode, this.errorMessage, this.errorDescription);
 
@@ -16,13 +16,13 @@ class GooglePayResponse {
         errorMessage = map['errorMessage'],
         errorDescription = map['errorDescription'];
 
-  static Map<String, dynamic> parseResult(String result) {
-    final decoded = jsonDecode(result) as Map<String, dynamic>;
+  static Map<String, dynamic>? parseResult(String result) {
+    final decoded = jsonDecode(result) as Map<String, dynamic>?;
     return decoded;
   }
 
   /// Payment token than you can use in payment by a cryptogram
-  String get token => result['paymentMethodData']['tokenizationData']['token'];
+  String? get token => result!['paymentMethodData']['tokenizationData']['token'];
 
   /// True if token was obtained successfully
   bool get isSuccess => status == "SUCCESS";

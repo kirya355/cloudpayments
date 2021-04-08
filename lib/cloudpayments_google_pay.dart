@@ -24,10 +24,10 @@ class CloudpaymentsGooglePay {
 
   /// Checks whether a Google Pay is available on this device and can process payment requests using
   /// Cloudpayments payment network brands (Visa and Mastercard).
-  Future<bool> isGooglePayAvailable() async {
+  Future<bool?> isGooglePayAvailable() async {
     if (Platform.isAndroid) {
       try {
-        final bool available = await _channel.invokeMethod('isGooglePayAvailable');
+        final bool? available = await _channel.invokeMethod('isGooglePayAvailable');
         return available;
       } on PlatformException catch (_) {
         return false;
@@ -62,12 +62,12 @@ class CloudpaymentsGooglePay {
   ///   // show error
   ///}
   /// ```
-  Future<GooglePayResponse> requestGooglePayPayment({
-    @required String price,
-    @required String currencyCode,
-    @required String countryCode,
-    @required String merchantName,
-    @required String publicId,
+  Future<GooglePayResponse?> requestGooglePayPayment({
+    required String price,
+    required String currencyCode,
+    required String countryCode,
+    required String merchantName,
+    required String publicId,
   }) async {
     if (Platform.isAndroid) {
       try {
