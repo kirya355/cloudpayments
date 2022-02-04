@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 
 abstract class CheckoutEvent extends Equatable {
   const CheckoutEvent();
+
   @override
   List<Object> get props => [];
 }
@@ -13,7 +14,12 @@ class PayButtonPressed extends CheckoutEvent {
   final String expiryDate;
   final String cvcCode;
 
-  PayButtonPressed({this.cardHolder, this.cardNumber, this.expiryDate, this.cvcCode});
+  PayButtonPressed({
+    required this.cardHolder,
+    required this.cardNumber,
+    required this.expiryDate,
+    required this.cvcCode,
+  });
 }
 
 class Init extends CheckoutEvent {}
@@ -23,7 +29,11 @@ class Auth extends CheckoutEvent {
   final String cardHolder;
   final String amount;
 
-  Auth(this.cryptogram, this.cardHolder, this.amount);
+  Auth(
+    this.cryptogram,
+    this.cardHolder,
+    this.amount,
+  );
 }
 
 class Charge extends CheckoutEvent {
@@ -47,10 +57,6 @@ class Post3DS extends CheckoutEvent {
   Post3DS(this.md, this.paRes);
 }
 
-class GooglePayPressed extends CheckoutEvent {
+class GooglePayPressed extends CheckoutEvent {}
 
-}
-
-class ApplePayPressed extends CheckoutEvent {
-
-}
+class ApplePayPressed extends CheckoutEvent {}

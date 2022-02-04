@@ -4,5 +4,10 @@ class ThreeDsResponse {
   final bool? success;
   final String? error;
 
-  ThreeDsResponse({this.md, this.paRes, this.success, this.error});
+  ThreeDsResponse({
+    this.md,
+    this.paRes,
+    this.success,
+    this.error,
+  });
 }

@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   final Widget child;
   final Color backgroundColor;
-  final Function onPressed;
+  final VoidCallback onPressed;
 
-  CustomButton({this.child, this.backgroundColor, this.onPressed});
+  CustomButton({
+    required this.child,
+    required this.backgroundColor,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {

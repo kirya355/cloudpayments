@@ -30,29 +30,33 @@ class Network {
   }
 
   Future<Response> get(
-      String url, {
-        Map<String, dynamic> query,
-        Map<String, String> headers,
-      }) async {
-    return _dio.get(
-      url,
-      queryParameters: query,
-      options: dio.Options(headers: headers),
-    ).then(_toResponse);
+    String url, {
+    Map<String, dynamic>? query,
+    Map<String, String>? headers,
+  }) async {
+    return _dio
+        .get(
+          url,
+          queryParameters: query,
+          options: dio.Options(headers: headers),
+        )
+        .then(_toResponse);
   }
 
   Future<Response> post(
-      String url, {
-        Map<String, dynamic> query,
-        Map<String, dynamic> body,
-        Map<String, String> headers,
-      }) async {
-    return _dio.post(
-      url,
-      queryParameters: query,
-      data: body,
-      options: dio.Options(headers: headers),
-    ).then(_toResponse);
+    String url, {
+    Map<String, dynamic>? query,
+    Map<String, dynamic>? body,
+    Map<String, String>? headers,
+  }) async {
+    return _dio
+        .post(
+          url,
+          queryParameters: query,
+          data: body,
+          options: dio.Options(headers: headers),
+        )
+        .then(_toResponse);
   }
 
   Response _toResponse(dio.Response r) {

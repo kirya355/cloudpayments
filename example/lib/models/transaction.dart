@@ -2,8 +2,8 @@ class Transaction {
   final String transactionId;
   final int reasonCode;
   final String cardHolderMessage;
-  final String paReq;
-  final String acsUrl;
+  final String? paReq;
+  final String? acsUrl;
 
   Transaction.fromJson(Map<String, dynamic> json)
       : transactionId = json['TransactionId'].toString(),

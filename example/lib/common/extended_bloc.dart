@@ -9,14 +9,12 @@ abstract class BlocCommand {}
 class CloseScreen extends BlocCommand {}
 
 class ShowSnackBar extends BlocCommand {
-  final String message;
+  final String? message;
 
   ShowSnackBar(this.message);
 }
 
-
 abstract class ExtendedBloc<Event, State> extends Bloc<Event, State> {
-
   ExtendedBloc(State initialState) : super(initialState);
 
   final _commandsController = StreamController<BlocCommand>.broadcast();
@@ -39,8 +37,8 @@ class BlocCommandsListener<B extends ExtendedBloc> extends StatefulWidget {
   final Widget child;
 
   BlocCommandsListener({
-    @required this.listener,
-    this.child,
+    required this.listener,
+    required this.child,
   });
 
   @override
@@ -48,8 +46,8 @@ class BlocCommandsListener<B extends ExtendedBloc> extends StatefulWidget {
 }
 
 class _BlocCommandsListenerState<B extends ExtendedBloc> extends State<BlocCommandsListener> {
-  B _bloc;
-  StreamSubscription<BlocCommand> _subscription;
+  B? _bloc;
+  StreamSubscription<BlocCommand>? _subscription;
 
   @override
   void initState() {
@@ -71,7 +69,7 @@ class _BlocCommandsListenerState<B extends ExtendedBloc> extends State<BlocComma
 
   void _subscribe() {
     if (_bloc != null) {
-      _bloc.commandsStream.listen(
+      _bloc!.commandsStream.listen(
         (command) {
           widget.listener(context, command);
         },
@@ -81,7 +79,7 @@ class _BlocCommandsListenerState<B extends ExtendedBloc> extends State<BlocComma
 
   void _unsubscribe() {
     if (_subscription != null) {
-      _subscription.cancel();
+      _subscription!.cancel();
       _subscription = null;
     }
   }

@@ -62,7 +62,7 @@ class _CheckoutScreenContentState extends State<CheckoutScreenContent> {
         listener: (context, command) {
           if (command is ShowSnackBar) {
             final snackBar = SnackBar(
-              content: Text(command.message),
+              content: Text('${command.message}'),
             );
             Scaffold.of(context).showSnackBar(snackBar);
           }
@@ -164,10 +164,8 @@ class _CheckoutScreenContentState extends State<CheckoutScreenContent> {
                         ),
                         onPressed: () => _onPayClick(context),
                       ),
-                      if (state.isGooglePayAvailable)
-                        GooglePaySection(),
-                      if (state.isApplePayAvailable)
-                        ApplePaySection(),
+                      if (state.isGooglePayAvailable) GooglePaySection(),
+                      if (state.isApplePayAvailable) ApplePaySection(),
                     ],
                   ),
                 ),
