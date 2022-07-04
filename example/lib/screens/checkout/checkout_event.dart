@@ -25,7 +25,7 @@ class PayButtonPressed extends CheckoutEvent {
 class Init extends CheckoutEvent {}
 
 class Auth extends CheckoutEvent {
-  final String cryptogram;
+  final String? cryptogram;
   final String cardHolder;
   final String amount;
 
@@ -37,8 +37,8 @@ class Auth extends CheckoutEvent {
 }
 
 class Charge extends CheckoutEvent {
-  final String token;
-  final String cardHolder;
+  final String? token;
+  final String? cardHolder;
   final String amount;
 
   Charge(this.token, this.cardHolder, this.amount);

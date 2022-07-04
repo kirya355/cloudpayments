@@ -76,7 +76,7 @@ class CheckoutBloc extends ExtendedBloc<CheckoutEvent, CheckoutState> {
     emit(state.copyWith(isLoading: true));
 
     try {
-      final transaction = await api.auth(event.cryptogram, event.cardHolder, event.amount);
+      final transaction = await api.auth(event.cryptogram!, event.cardHolder, event.amount);
       emit(state.copyWith(isLoading: false));
       if (transaction.paReq != null && transaction.acsUrl != null) {
         add(Show3DS(transaction));
@@ -176,7 +176,7 @@ class CheckoutBloc extends ExtendedBloc<CheckoutEvent, CheckoutState> {
     emit(state.copyWith(isLoading: true));
 
     try {
-      final transaction = await api.charge(event.token, event.cardHolder, event.amount);
+      final transaction = await api.charge(event.token!, event.cardHolder!, event.amount);
       emit(state.copyWith(isLoading: false));
       sendCommand(ShowSnackBar(transaction.cardHolderMessage));
     } catch (e) {

@@ -43,12 +43,10 @@ class CheckoutState extends Equatable {
       isLoading: isLoading ?? this.isLoading,
       isGooglePayAvailable: isGooglePayAvailable ?? this.isGooglePayAvailable,
       isApplePayAvailable: isApplePayAvailable ?? this.isApplePayAvailable,
-      cardHolderError: cardHolderError,
-      cardNumberError: cardNumberError,
-      expiryDateError: expiryDateError,
-      cvcError: cvcError,
+      cardHolderError: cardHolderError ?? this.cardHolderError,
+      cardNumberError: cardNumberError ?? this.cardNumberError,
+      expiryDateError: expiryDateError ?? this.expiryDateError,
+      cvcError: cvcError ?? this.cvcError,
     );
   }
 }
-
-
