@@ -134,15 +134,15 @@ class CheckoutBloc extends ExtendedBloc<CheckoutEvent, CheckoutState> {
 
       emit(state.copyWith(isLoading: false));
 
-      if (result != null) {
-        if (result.isSuccess) {
-          final token = result.token;
-          assert(token != null);
-          add(Charge(token!, 'Google Pay', '2.34'));
-        } else if (result.isError) {
-          sendCommand(ShowSnackBar(result.errorDescription));
-        }
+      if (result.isSuccess) {
+        final token = result.token;
+        add(Charge(token, 'Google Pay', '2.34'));
+      } else if (result.isError) {
+        sendCommand(ShowSnackBar(result.errorDescription));
+      } else if (result.isCanceled) {
+        sendCommand(ShowSnackBar('Google pay has canceled'));
       }
+
     } catch (e) {
       emit(state.copyWith(isLoading: false));
       sendCommand(ShowSnackBar("Error"));
@@ -162,9 +162,15 @@ class CheckoutBloc extends ExtendedBloc<CheckoutEvent, CheckoutState> {
         ],
       );
 
-      if (result != null) {
-        add(Auth(result, '', '650.50'));
+      if (result.isSuccess) {
+        final token = result.token;
+        add(Auth(token, '', '650.50'));
+      } else if (result.isError) {
+        sendCommand(ShowSnackBar(result.errorMessage));
+      } else if (result.isCanceled) {
+        sendCommand(ShowSnackBar('Apple pay has canceled'));
       }
+
     } catch (e) {
       print('Error $e');
       emit(state.copyWith(isLoading: false));

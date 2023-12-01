@@ -27,7 +27,7 @@ class CloudpaymentsGooglePay {
   Future<bool?> isGooglePayAvailable() async {
     if (Platform.isAndroid) {
       try {
-        final bool? available = await _channel.invokeMethod('isGooglePayAvailable');
+        final available = await _channel.invokeMethod('isGooglePayAvailable');
         return available;
       } on PlatformException catch (_) {
         return false;
@@ -50,7 +50,6 @@ class CloudpaymentsGooglePay {
   ///
   /// [publicId] - Your Cloudpayments public id. You can obtain it in your [Cloudpayments account](https://merchant.cloudpayments.ru/)
   ///
-  ///
   /// Returns [GooglePayResponse]. You have to check whether response is success and if so, you can obtain
   /// payment token by [response.token]
   ///
@@ -60,9 +59,11 @@ class CloudpaymentsGooglePay {
   ///   // use token for payment by a cryptogram
   /// } else if (response.isError) {
   ///   // show error
+  ///} else if (response.isCanceled) {
+  ///   // google pay was canceled
   ///}
   /// ```
-  Future<GooglePayResponse?> requestGooglePayPayment({
+  Future<GooglePayResponse> requestGooglePayPayment({
     required String price,
     required String currencyCode,
     required String countryCode,
@@ -71,7 +72,8 @@ class CloudpaymentsGooglePay {
   }) async {
     if (Platform.isAndroid) {
       try {
-        final dynamic result = await _channel.invokeMethod<dynamic>('requestGooglePayPayment', {
+        final dynamic result =
+            await _channel.invokeMethod<dynamic>('requestGooglePayPayment', {
           'price': price,
           'currencyCode': currencyCode,
           'countryCode': countryCode,
@@ -79,10 +81,10 @@ class CloudpaymentsGooglePay {
           'publicId': publicId,
         });
         return GooglePayResponse.fromMap(result);
-      } on PlatformException catch (_) {
-        return null;
+      } on PlatformException catch (e) {
+        return GooglePayResponse.fromPlatformException(e);
       } catch (e) {
-        return null;
+        return GooglePayResponse.fromException();
       }
     } else {
       throw Exception("Google Pay is allowed only on Android");

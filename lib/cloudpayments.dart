@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:cloudpayments/cryptogram.dart';
 import 'package:cloudpayments/three_ds_response.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// Contains helpful methods that allow you to check payment card parameters validity and create a card cryptogram.
@@ -11,9 +10,10 @@ class Cloudpayments {
   static const MethodChannel _channel = const MethodChannel('cloudpayments');
 
   /// Checks if the given [cardNumber] is valid.
-  static Future<bool?> isValidNumber(String cardNumber) async {
-    final bool? valid = await _channel.invokeMethod<bool>('isValidNumber', {'cardNumber': cardNumber});
-    return valid;
+  static Future<bool> isValidNumber(String cardNumber) async {
+    final valid = await _channel
+        .invokeMethod<bool>('isValidNumber', {'cardNumber': cardNumber});
+    return valid!;
   }
 
   /// Checks if the given card [expiryDate] is valid and not expired.
@@ -21,8 +21,9 @@ class Cloudpayments {
   /// [expiryDate] must be in the format 'MM/YY'
   static Future<bool?> isValidExpiryDate(String expiryDate) async {
     final date = _formatExpiryDate(expiryDate);
-    final valid = await _channel.invokeMethod<bool>('isValidExpiryDate', {'expiryDate': date});
-    return valid;
+    final valid = await _channel
+        .invokeMethod<bool>('isValidExpiryDate', {'expiryDate': date});
+    return valid!;
   }
 
   /// Generates card cryptogram.
@@ -41,7 +42,8 @@ class Cloudpayments {
     required String publicId,
   }) async {
     final date = _formatExpiryDate(cardDate);
-    final dynamic arguments = await _channel.invokeMethod<dynamic>('cardCryptogram', {
+    final dynamic arguments =
+        await _channel.invokeMethod<dynamic>('cardCryptogram', {
       'cardNumber': cardNumber,
       'cardDate': date,
       'cardCVC': cardCVC,
@@ -60,7 +62,8 @@ class Cloudpayments {
     required String paReq,
   }) async {
     try {
-      final dynamic arguments = await _channel.invokeMethod<dynamic>('show3ds', {
+      final dynamic arguments =
+          await _channel.invokeMethod<dynamic>('show3ds', {
         'acsUrl': acsUrl,
         'transactionId': transactionId,
         'paReq': paReq,
@@ -69,20 +72,21 @@ class Cloudpayments {
       if (arguments == null) {
         return null;
       } else {
-        return ThreeDsResponse(success: true, md: arguments['md'], paRes: arguments['paRes']);
+        return ThreeDsResponse(
+            success: true, md: arguments['md'], paRes: arguments['paRes']);
       }
     } on PlatformException catch (e) {
       return ThreeDsResponse(success: false, error: e.message);
     }
   }
 
-  static String? _formatExpiryDate(String expiryDate) {
-    String? date;
+  static String _formatExpiryDate(String expiryDate) {
     if (Platform.isAndroid) {
-      date = expiryDate.replaceAll('/', '');
+      return expiryDate.replaceAll('/', '');
     } else if (Platform.isIOS) {
-      date = expiryDate;
+      return expiryDate;
+    } else {
+      throw Exception("Platform is not supported");
     }
-    return date;
   }
 }

@@ -64,7 +64,7 @@ class _CheckoutScreenContentState extends State<CheckoutScreenContent> {
             final snackBar = SnackBar(
               content: Text('${command.message}'),
             );
-            Scaffold.of(context).showSnackBar(snackBar);
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         },
         child: BlocBuilder<CheckoutBloc, CheckoutState>(

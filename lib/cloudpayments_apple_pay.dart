@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:cloudpayments/apple_pay_response.dart';
 import 'package:flutter/services.dart';
 
 /// Contains helper methods that allow you to interact with Apple Pay.
@@ -14,7 +14,7 @@ class CloudpaymentsApplePay {
   Future<bool?> isApplePayAvailable() async {
     if (Platform.isIOS) {
       try {
-        final bool? available = await _channel.invokeMethod('isApplePayAvailable');
+        final available = await _channel.invokeMethod('isApplePayAvailable');
         return available;
       } on PlatformException catch (_) {
         return false;
@@ -44,7 +44,21 @@ class CloudpaymentsApplePay {
   ///   {"name": "Total", "price": "430.60"},
   /// ]
   ///```
-  Future<String?> requestApplePayPayment({
+  ///
+  /// Returns [ApplePayResponse]. You have to check whether response is success and if so, you can obtain
+  /// payment token by [response.token]
+  ///
+  /// ```dart
+  /// if (response.isSuccess) {
+  ///   final token = response.token;
+  ///   // use token for payment by a cryptogram
+  /// } else if (response.isError) {
+  ///   // show error
+  ///} else if (response.isCanceled) {
+  ///   // apple pay was canceled
+  ///}
+  /// ```
+  Future<ApplePayResponse> requestApplePayPayment({
     required String merchantId,
     required String currencyCode,
     required String countryCode,
@@ -52,20 +66,22 @@ class CloudpaymentsApplePay {
   }) async {
     if (Platform.isIOS) {
       try {
-        final dynamic result = await _channel.invokeMethod<dynamic>('requestApplePayPayment', {
+        final dynamic result =
+            await _channel.invokeMethod<dynamic>('requestApplePayPayment', {
           'merchantId': merchantId,
           'currencyCode': currencyCode,
           'countryCode': countryCode,
           'products': products,
         });
-        return result;
-      } on PlatformException catch (_) {
-        return null;
+
+        return ApplePayResponse.fromResult(result);
+      } on PlatformException catch (e) {
+        return ApplePayResponse.fromPlatformException(e);
       } catch (e) {
-        return null;
+        return ApplePayResponse.fromException();
       }
     } else {
-      throw Exception("Apple Pay is allowed only on Android");
+      throw Exception("Apple Pay is allowed only on iOS");
     }
   }
 }
