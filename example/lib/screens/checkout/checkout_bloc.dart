@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bloc/src/bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:cloudpayments/cloudpayments.dart';
 import 'package:cloudpayments/cloudpayments_apple_pay.dart';
 import 'package:cloudpayments/cloudpayments_google_pay.dart';
@@ -39,7 +39,7 @@ class CheckoutBloc extends ExtendedBloc<CheckoutEvent, CheckoutState> {
 
   FutureOr<void> _payButtonPressed(PayButtonPressed event, Emitter<CheckoutState> emit) async {
     final isCardHolderValid = event.cardHolder.isNotEmpty;
-    final isValidCardNumber = await Cloudpayments.isValidNumber(event.cardNumber) ?? false;
+    final isValidCardNumber = await Cloudpayments.isValidNumber(event.cardNumber);
     final isValidExpiryDate = await Cloudpayments.isValidExpiryDate(event.expiryDate) ?? false;
     final isValidCvcCode = event.cvcCode.length == 3;
 
@@ -58,7 +58,14 @@ class CheckoutBloc extends ExtendedBloc<CheckoutEvent, CheckoutState> {
       return;
     }
 
-    emit(state.copyWith(cardHolderError: null, cardNumberError: null, expiryDateError: null, cvcError: null));
+    emit(
+      state.copyWith(
+        cardHolderError: null,
+        cardNumberError: null,
+        expiryDateError: null,
+        cvcError: null,
+      ),
+    );
 
     final cryptogram = await Cloudpayments.cardCryptogram(
       cardNumber: event.cardNumber,
@@ -142,7 +149,6 @@ class CheckoutBloc extends ExtendedBloc<CheckoutEvent, CheckoutState> {
       } else if (result.isCanceled) {
         sendCommand(ShowSnackBar('Google pay has canceled'));
       }
-
     } catch (e) {
       emit(state.copyWith(isLoading: false));
       sendCommand(ShowSnackBar("Error"));
@@ -170,7 +176,6 @@ class CheckoutBloc extends ExtendedBloc<CheckoutEvent, CheckoutState> {
       } else if (result.isCanceled) {
         sendCommand(ShowSnackBar('Apple pay has canceled'));
       }
-
     } catch (e) {
       print('Error $e');
       emit(state.copyWith(isLoading: false));
